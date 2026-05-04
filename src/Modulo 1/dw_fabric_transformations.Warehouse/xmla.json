@@ -1,0 +1,185 @@
+{
+  "name": "{{Dataset_Name}}",
+  "compatibilityLevel": 1604,
+  "model": {
+    "name": "{{Dataset_Name}}",
+    "culture": "en-US",
+    "collation": "Latin1_General_100_BIN2_UTF8",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "Address",
+        "sourceLineageTag": "[SalesLT].[Address]",
+        "columns": [
+          {
+            "name": "AddressID",
+            "dataType": "int64",
+            "sourceColumn": "AddressID",
+            "formatString": "0",
+            "sourceProviderType": "int",
+            "sourceLineageTag": "AddressID",
+            "summarizeBy": "sum",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "AddressLine1",
+            "dataType": "string",
+            "sourceColumn": "AddressLine1",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "AddressLine1",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "AddressLine2",
+            "dataType": "string",
+            "sourceColumn": "AddressLine2",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "AddressLine2",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "City",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "StateProvince",
+            "dataType": "string",
+            "sourceColumn": "StateProvince",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "StateProvince",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "CountryRegion",
+            "dataType": "string",
+            "sourceColumn": "CountryRegion",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "CountryRegion",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "PostalCode",
+            "dataType": "string",
+            "sourceColumn": "PostalCode",
+            "sourceProviderType": "varchar",
+            "sourceLineageTag": "PostalCode",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "rowguid",
+            "sourceColumn": "rowguid",
+            "sourceProviderType": "uniqueidentifier",
+            "sourceLineageTag": "rowguid",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          },
+          {
+            "name": "ModifiedDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ModifiedDate",
+            "formatString": "General Date",
+            "sourceProviderType": "datetime2",
+            "sourceLineageTag": "ModifiedDate",
+            "summarizeBy": "none",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ]
+          }
+        ],
+        "partitions": [
+          {
+            "name": "{{Partition_Name}}",
+            "mode": "directLake",
+            "source": {
+              "type": "entity",
+              "entityName": "Address",
+              "expressionSource": "DatabaseQuery",
+              "schemaName": "SalesLT"
+            }
+          }
+        ],
+        "annotations": [
+          {
+            "name": "IsTableInBiModel",
+            "value": "False"
+          }
+        ]
+      }
+    ],
+    "expressions": [
+      {
+        "name": "DatabaseQuery",
+        "kind": "m",
+        "expression": "let\n    database = {{TDS_Endpoint}}\nin\n    database\n"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      },
+      {
+        "name": "SourceLineageTagType",
+        "value": "DatabaseFullyQualifiedName"
+      }
+    ]
+  }
+}
