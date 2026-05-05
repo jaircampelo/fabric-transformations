@@ -38,7 +38,7 @@
             },
             "annotations": []
           },
-          "firstRowOnly": true
+          "firstRowOnly": false
         },
         "policy": {
           "timeout": "0.00:10:00",
@@ -50,6 +50,116 @@
         "name": "Orquestrador",
         "description": "Ler planilha excel com metadados de orquestração do pipeline",
         "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "isSequential": false,
+          "items": {
+            "value": "@activity('Orquestrador').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "SqlServerSource",
+                  "sqlReaderQuery": {
+                    "value": "@item().SourceQuery",
+                    "type": "Expression"
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
+                  "datasetSettings": {
+                    "type": "SqlServerTable",
+                    "typeProperties": {
+                      "database": {
+                        "value": "@item().SourceDatabase",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "9a62399e-e9de-4ee1-b698-8c55988a4694"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "ParquetSink",
+                  "formatSettings": {
+                    "type": "ParquetWriteSettings",
+                    "enableVertiParquet": false
+                  },
+                  "storeSettings": {
+                    "type": "AzureBlobStorageWriteSettings"
+                  },
+                  "datasetSettings": {
+                    "type": "Parquet",
+                    "typeProperties": {
+                      "location": {
+                        "type": "LakehouseLocation",
+                        "folderPath": {
+                          "value": "@item().TargetFolder",
+                          "type": "Expression"
+                        },
+                        "fileName": {
+                          "value": "@concat(\n    item().TargetFile,\n    item().TargetFormat\n)",
+                          "type": "Expression"
+                        }
+                      },
+                      "compressionCodec": "snappy"
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "lh_bronze",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "cef07303-b992-8b6f-4e7b-2aae647f990f",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Files"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.00:10:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "SQL para LH",
+              "description": "Copia as tabelas do SQL Server para o Lakehouse como arquivos",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Iterador",
+        "description": "Itera sobre cada linha do Orquestrador para trazer várias tabelas do SQL Server, direcionando ao Copy Data",
+        "dependsOn": [
+          {
+            "activity": "Orquestrador",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
     ]
   }
